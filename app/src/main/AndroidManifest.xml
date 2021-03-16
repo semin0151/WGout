@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WGout">
         <activity android:name=".HomeActivity"> </activity>
-        <activity android:name=".CalenderActivity"> </activity>
+        <activity android:name=".CalendarActivity"> </activity>
         <activity android:name=".DestinationActivity">  </activity>
         <activity android:name=".LuckActivity">  </activity>
 

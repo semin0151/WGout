@@ -9,7 +9,7 @@
     android:id="@+id/drawer">
 
     <Button
-        android:id="@+id/btn_calender"
+        android:id="@+id/btn_calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="캘린더"/>

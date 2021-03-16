@@ -4,10 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -46,7 +44,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void init_view(){
         btn_drawer = (Button)findViewById(R.id.btn_drawer);
-        btn_calender = (Button)findViewById(R.id.btn_calender);
+        btn_calender = (Button)findViewById(R.id.btn_calendar);
         btn_destination = (Button)findViewById(R.id.btn_destination);
         btn_luck = (Button)findViewById(R.id.btn_luck);
         btn_weather = (Button)findViewById(R.id.btn_weather);
@@ -69,7 +67,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 drawerLayout.closeDrawers();
-                Intent intent = new Intent(HomeActivity.this, CalenderActivity.class);
+                Intent intent = new Intent(HomeActivity.this, CalendarActivity.class);
                 startActivity(intent);
             }
         });
