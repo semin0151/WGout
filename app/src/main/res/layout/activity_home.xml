@@ -8,18 +8,38 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
-        <TextView
-            android:id="@+id/tv_test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="HOME"/>
+        android:orientation="vertical">
         <Button
-            android:id="@+id/btn_test"
+            android:id="@+id/btn_drawer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="button"/>
+
+        <TextView
+            android:id="@+id/tv_home_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2021.03.14"
+            android:textSize="40dp"
+            android:padding="30dp"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="오늘의 할일"
+            android:paddingLeft="30dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_home_today"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="30dp"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#aaaaaa"/>
     </LinearLayout>
 
     <include layout = "@layout/activity_drawer"/>
