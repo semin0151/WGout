@@ -11,6 +11,8 @@
         android:theme="@style/Theme.WGout">
         <activity android:name=".HomeActivity"> </activity>
         <activity android:name=".CalendarActivity"> </activity>
+        <activity android:name=".CalendarScheduleActivity">  </activity>
+        <activity android:name=".CalendarScheduleAddActivity">  </activity>
         <activity android:name=".DestinationActivity">  </activity>
         <activity android:name=".LuckActivity">  </activity>
 
@@ -24,6 +26,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="q618nmd8vn" />
     </application>
 
 </manifest>

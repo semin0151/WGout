@@ -32,13 +32,21 @@ public class CalendarActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
+        Intent intent = getIntent();
 
+        init_view();
+        btn_clicked();
+        setCalender(year,month);
+    }
+
+    private void init_view(){
         btn_calendar_past = (Button)findViewById(R.id.btn_calendar_past);
         btn_calendar_future = (Button)findViewById(R.id.btn_calendar_future);
-
         tv_calendar_date = (TextView)findViewById(R.id.tv_calendar_date);
         rv_calendar = (RecyclerView)findViewById(R.id.rv_calendar);
+    }
 
+    private void btn_clicked(){
         btn_calendar_past.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,9 +64,6 @@ public class CalendarActivity extends AppCompatActivity {
                 setCalender(year,month);
             }
         });
-        setCalender(year,month);
-        Intent intent = getIntent();
-
     }
 
     private void setCalender(int year, int month){

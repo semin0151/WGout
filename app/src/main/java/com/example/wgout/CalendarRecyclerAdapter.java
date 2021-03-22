@@ -1,6 +1,8 @@
 package com.example.wgout;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,12 +30,14 @@ public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecycl
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView tv_calendar_day;
+        private TextView tv_calendar_schedule;
         private ImageView iv_calendar_day;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tv_calendar_day = (TextView)itemView.findViewById(R.id.tv_calendar_day);
+            tv_calendar_schedule = (TextView)itemView.findViewById(R.id.tv_calendar_schedule);
             iv_calendar_day = (ImageView)itemView.findViewById(R.id.iv_calendar_day);
         }
     }
@@ -96,6 +100,9 @@ public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecycl
                     holder.iv_calendar_day.setBackgroundColor(0xff00ff00);
                 }
                 holder.tv_calendar_day.setText(Integer.toString(item.getDay()));
+
+                selItem(holder,item.getDay());
+
                 break;
         }
     }
@@ -112,5 +119,23 @@ public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecycl
         item.setDay(day);
 
         lists.add(item);
+    }
+
+    private void selItem(ViewHolder holder,int day){
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent intent = new Intent(v.getContext(), CalendarScheduleActivity.class);
+                    intent.putExtra("year", year);
+                    intent.putExtra("month",month);
+                    intent.putExtra("day", day);
+                    v.getContext().startActivity(intent);
+                }catch (Exception e){
+                    holder.tv_calendar_day.setText(e.getMessage());
+                }
+
+            }
+        });
     }
 }
