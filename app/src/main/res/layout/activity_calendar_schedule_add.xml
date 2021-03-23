@@ -35,6 +35,11 @@
         android:layout_height="50dp"
         android:hint="일정"
         android:layout_margin="10dp"/>
+    <TextView
+        android:id="@+id/tv_calendar_schedule_add_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="위도경도"/>
 
     <com.naver.maps.map.MapView
         android:id="@+id/mv_calendar_schedule_add"
