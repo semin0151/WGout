@@ -68,6 +68,9 @@ public class CalendarScheduleActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CalendarScheduleActivity.this, CalendarScheduleAddActivity.class);
+                intent.putExtra("year",year);
+                intent.putExtra("month", month);
+                intent.putExtra("day",day);
                 startActivity(intent);
             }
         });
@@ -91,8 +94,8 @@ public class CalendarScheduleActivity extends AppCompatActivity {
             String sqlCreateTbl = "CREATE TABLE IF NOT EXISTS SCHEDULE (" +
                     "DATE " + "TEXT," +
                     "CONTENT " + "TEXT," +
-                    "LAT " + "INTEGER," +
-                    "LNG " + "INTEGER" +
+                    "LAT " + "DOUBLE," +
+                    "LNG " + "DOUBLE" +
                     ")";
             sqliteDB.execSQL(sqlCreateTbl);
         }
