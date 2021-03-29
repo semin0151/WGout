@@ -18,37 +18,40 @@
             android:textSize="30dp"
             android:layout_marginBottom="10dp"/>
 
-        <Button
-            android:id="@+id/btn_calendar_schedule_add_ok"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="추가"/>
     </LinearLayout>
-
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#000000"/>
 
-    <EditText
-        android:id="@+id/et_calendar_schedule_add"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="일정"
-        android:layout_margin="10dp"/>
     <TextView
-        android:id="@+id/tv_calendar_schedule_add_address"
+        android:id="@+id/tv_calendar_schedule_show_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="일정"
+        android:textSize="20dp"
+        android:layout_margin="10dp"/>
+
+    <TextView
+        android:id="@+id/tv_calendar_schedule_show_gps"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="위치"
         android:layout_margin="10dp"/>
 
+
     <com.naver.maps.map.MapView
-        android:id="@+id/mv_calendar_schedule_add"
+        android:id="@+id/mv_calendar_schedule_show"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_margin="10dp"/>
 
+    <Button
+        android:id="@+id/btn_calendar_schedule_show_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="삭제"
+        android:layout_gravity="center"/>
 
 </LinearLayout>

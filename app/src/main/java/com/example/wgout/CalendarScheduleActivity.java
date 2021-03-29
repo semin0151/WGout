@@ -1,6 +1,7 @@
 package com.example.wgout;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
@@ -26,7 +27,9 @@ public class CalendarScheduleActivity extends AppCompatActivity {
     private SQLiteDatabase sqliteDB;
 
     private int year, month, day;
-    private String str;
+    private static final int CODE_RESULT = 100;
+    private String str, mdate;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,13 +39,23 @@ public class CalendarScheduleActivity extends AppCompatActivity {
         init_intent();
         init_rv();
 
+
         sqliteDB = init_DB();
         init_tables();
 
         btn_clicked();
+        load_values();
 
+    }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == CODE_RESULT){
+            init_rv();
+            load_values();
+        }
+        // RecyclerView Update
     }
 
     private void init_view(){
@@ -57,9 +70,9 @@ public class CalendarScheduleActivity extends AppCompatActivity {
         year = intent.getIntExtra("year",0);
         month = intent.getIntExtra("month",0);
         day = intent.getIntExtra("day",0);
-
+        mdate = Integer.toString((year * 10000) + ((month+1) * 100) + day);
         str = Integer.toString(year) + "/" + Integer.toString(month+1) + "/" + Integer.toString(day);
-        tv_calendar_schedule_date.setText(str);
+        tv_calendar_schedule_date.setText(mdate);
 
     }
 
@@ -71,7 +84,7 @@ public class CalendarScheduleActivity extends AppCompatActivity {
                 intent.putExtra("year",year);
                 intent.putExtra("month", month);
                 intent.putExtra("day",day);
-                startActivity(intent);
+                startActivityForResult(intent,0);
             }
         });
     }
@@ -107,18 +120,20 @@ public class CalendarScheduleActivity extends AppCompatActivity {
         adapter_calendar_schedule = new CalendarScheduleRecyclerAdapter();
 
         rv_calendar_schedule.setAdapter(adapter_calendar_schedule);
+    }
 
+    private void load_values(){
+        if(sqliteDB != null){
+            Cursor cursor_calendar_schedule = null;
+            cursor_calendar_schedule = sqliteDB.rawQuery("SELECT * FROM SCHEDULE WHERE DATE = '" + mdate + "'", null);
+
+            while(cursor_calendar_schedule.moveToNext()){
+                adapter_calendar_schedule.addItem(cursor_calendar_schedule.getString(1),cursor_calendar_schedule.getDouble(2), cursor_calendar_schedule.getDouble(3));
+            }
+        }
         if (adapter_calendar_schedule.getItemCount()==0) {
             rv_calendar_schedule.setVisibility(View.GONE);
             tv_calendar_schedule_no.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void save_values(){
-
-    }
-
-    private void load_values(){
-
     }
 }

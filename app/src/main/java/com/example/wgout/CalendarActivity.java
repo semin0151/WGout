@@ -82,6 +82,7 @@ public class CalendarActivity extends AppCompatActivity {
         }
         for(int i = 1; i <= max; i++){
             adapter_calendar.addItem(CALENDAR_DAY,i);
+            //날짜에 따른 일정 표시
         }
     }
 }
