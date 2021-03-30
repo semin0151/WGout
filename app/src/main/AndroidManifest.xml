@@ -17,6 +17,8 @@
         <activity android:name=".CalendarScheduleAddActivity">  </activity>
         <activity android:name=".CalendarScheduleShowActivity">  </activity>
         <activity android:name=".DestinationActivity">  </activity>
+        <activity android:name=".DestinaitonAddActivity">  </activity>
+        <activity android:name=".DestinationShowActivity">  </activity>
         <activity android:name=".LuckActivity">  </activity>
 
         <activity android:name=".WeatherActivity">

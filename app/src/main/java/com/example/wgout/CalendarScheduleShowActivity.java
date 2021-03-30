@@ -53,17 +53,8 @@ public class CalendarScheduleShowActivity extends AppCompatActivity implements O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar_schedule_show);
         //날짜 표시
-        Intent intent = getIntent();
 
-        content = intent.getStringExtra("content");
-        lat = intent.getDoubleExtra("lat",1);
-        lng = intent.getDoubleExtra("lng",1);
-        year = intent.getIntExtra("year",1);
-        month = intent.getIntExtra("month", 1);
-        day = intent.getIntExtra("day",1);
-
-        mdate = Integer.toString((year * 10000) + ((month+1) * 100) + day);
-
+        init_intent();
 
         init_view();
         sqliteDB = init_DB();
@@ -83,6 +74,19 @@ public class CalendarScheduleShowActivity extends AppCompatActivity implements O
         tv_calendar_schedule_show_date = (TextView)findViewById(R.id.tv_calendar_schedule_show_date);
         tv_calendar_schedule_show_content = (TextView)findViewById(R.id.tv_calendar_schedule_show_content);
         tv_calendar_schedule_show_gps = (TextView)findViewById(R.id.tv_calendar_schedule_show_gps);
+    }
+
+    private void init_intent(){
+        Intent intent = getIntent();
+
+        content = intent.getStringExtra("content");
+        lat = intent.getDoubleExtra("lat",1);
+        lng = intent.getDoubleExtra("lng",1);
+        year = intent.getIntExtra("year",1);
+        month = intent.getIntExtra("month", 1);
+        day = intent.getIntExtra("day",1);
+
+        mdate = Integer.toString((year * 10000) + ((month+1) * 100) + day);
     }
 
     private SQLiteDatabase init_DB(){

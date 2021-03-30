@@ -38,13 +38,17 @@ public class CalendarActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
-        Intent intent = getIntent();
 
+        init_intent();
         sqliteDB = init_DB();
         init_tables();
         init_view();
         btn_clicked();
         setCalender(year,month);
+    }
+
+    private void init_intent(){
+        Intent intent = getIntent();
     }
 
     private void init_view(){

@@ -5,50 +5,50 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
         <TextView
-            android:id="@+id/tv_calendar_schedule_add_date"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="0000/00/00"
+            android:text="DESTINATION"
             android:textSize="30dp"
             android:layout_marginBottom="10dp"/>
 
-        <Button
-            android:id="@+id/btn_calendar_schedule_add_ok"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="저장"/>
-    </LinearLayout>
-
+    </RelativeLayout>
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#000000"/>
 
-    <EditText
-        android:id="@+id/et_calendar_schedule_add"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="일정"
-        android:layout_margin="10dp"/>
     <TextView
-        android:id="@+id/tv_calendar_schedule_add_address"
+        android:id="@+id/tv_destination_show_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="목적지"
+        android:textSize="20dp"
+        android:layout_margin="10dp"/>
+
+    <TextView
+        android:id="@+id/tv_destination_show_gps"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="위치"
         android:layout_margin="10dp"/>
 
+
     <com.naver.maps.map.MapView
-        android:id="@+id/mv_calendar_schedule_add"
+        android:id="@+id/mv_destination_show"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_margin="10dp"/>
 
+    <Button
+        android:id="@+id/btn_destination_show_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="삭제"
+        android:layout_gravity="center"/>
 
 </LinearLayout>

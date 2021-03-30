@@ -2,13 +2,10 @@ package com.example.wgout;
 
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,66 +25,58 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CalendarScheduleAddActivity extends AppCompatActivity implements OnMapReadyCallback, NaverMap.OnMapClickListener {
-    private Button btn_calendar_schedule_add_ok;
-    private MapView mv_calendar_schedule_add;
-    private EditText et_calendar_schedule_add;
-    private TextView tv_calendar_schedule_add_date;
-    private TextView tv_calendar_schedule_add_address;
+public class DestinationShowActivity extends AppCompatActivity implements OnMapReadyCallback {
+    private MapView mv_destination_show;
+    private Button btn_destination_show_delete;
+    private TextView tv_destination_show_location;
+    private TextView tv_destination_show_gps;
 
-    private ReverseGeocoderClient reverseGeocoderClient;
-    private ReverseGeocoderInterface reverseGeocoderInterface;
-
-    private int year, month, day;
-    private String key_id = "q618nmd8vn";
-    private String key = "DjrtsY4erRXEe41gTfwLZj0dQmldbk7ZhzI4hEVb";
-    private String maddress, mdate = "hi";
+    private String location;
+    private double lat, lng;
 
     private SQLiteDatabase sqliteDB;
 
+    private NaverMap naverMap;
+
     private Marker marker = new Marker();
-    private LatLng mlatlng = null;
 
-    private static NaverMap naverMap;
+    private String key_id = "q618nmd8vn";
+    private String key = "DjrtsY4erRXEe41gTfwLZj0dQmldbk7ZhzI4hEVb";
+    private String maddress;
 
+    private ReverseGeocoderClient reverseGeocoderClient;
+    private ReverseGeocoderInterface reverseGeocoderInterface;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calendar_schedule_add);
-
-        init_intent();
+        setContentView(R.layout.activity_destination_show);
 
         init_view();
+        init_intent();
+
         sqliteDB = init_DB();
         init_tables();
+        delete_values();
 
-        save_values();
-        mv_calendar_schedule_add.onCreate(savedInstanceState);
-        mv_calendar_schedule_add.getMapAsync(this);
-
-        mdate = Integer.toString((year * 10000) + ((month+1) * 100) + day);
-
-        try {
-            tv_calendar_schedule_add_date.setText(mdate);
-        }catch (Exception e){
-            tv_calendar_schedule_add_date.setText(e.getMessage());
-        }
+        tv_destination_show_location.setText(location);
+        mv_destination_show.onCreate(savedInstanceState);
+        mv_destination_show.getMapAsync(this);
 
     }
 
     private void init_view(){
-        btn_calendar_schedule_add_ok = (Button)findViewById(R.id.btn_calendar_schedule_add_ok);
-        mv_calendar_schedule_add = (MapView)findViewById(R.id.mv_calendar_schedule_add);
-        et_calendar_schedule_add = (EditText)findViewById(R.id.et_calendar_schedule_add);
-        tv_calendar_schedule_add_date = (TextView)findViewById(R.id.tv_calendar_schedule_add_date);
-        tv_calendar_schedule_add_address = (TextView)findViewById(R.id.tv_calendar_schedule_add_address);
+        mv_destination_show = (MapView)findViewById(R.id.mv_destination_show);
+        btn_destination_show_delete = (Button)findViewById(R.id.btn_destination_show_delete);
+        tv_destination_show_location = (TextView)findViewById(R.id.tv_destination_show_location);
+        tv_destination_show_gps = (TextView)findViewById(R.id.tv_destination_show_gps);
     }
 
     private void init_intent(){
         Intent intent = getIntent();
-        year = intent.getIntExtra("year",1);
-        month = intent.getIntExtra("month",1);
-        day = intent.getIntExtra("day",1);
+
+        location = intent.getStringExtra("location");
+        lat = intent.getDoubleExtra("lat",1);
+        lng = intent.getDoubleExtra("lng",1);
     }
 
     private SQLiteDatabase init_DB(){
@@ -105,9 +94,8 @@ public class CalendarScheduleAddActivity extends AppCompatActivity implements On
 
     private void init_tables(){
         if(sqliteDB != null) {
-            String sqlCreateTbl = "CREATE TABLE IF NOT EXISTS SCHEDULE (" +
-                    "DATE " + "TEXT," +
-                    "CONTENT " + "TEXT," +
+            String sqlCreateTbl = "CREATE TABLE IF NOT EXISTS DESTINATION (" +
+                    "LOCATION " + "TEXT," +
                     "LAT " + "DOUBLE," +
                     "LNG " + "DOUBLE" +
                     ")";
@@ -115,26 +103,13 @@ public class CalendarScheduleAddActivity extends AppCompatActivity implements On
         }
     }
 
-    private void save_values(){
-        btn_calendar_schedule_add_ok.setOnClickListener(new View.OnClickListener() {
+    private void delete_values(){
+        btn_destination_show_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    String sqlInsert = "INSERT INTO SCHEDULE" +
-                            "(DATE, CONTENT, LAT, LNG) VALUES (" +
-                            "'" + mdate + "'" + "," +
-                            "'" + et_calendar_schedule_add.getText().toString() + "'" + "," +
-                            mlatlng.latitude + "," +
-                            mlatlng.longitude + ")";
-                    sqliteDB.execSQL(sqlInsert);
-
-                    et_calendar_schedule_add.setText("");
-                    Toast.makeText(getApplicationContext(), "저장되었습니다.", Toast.LENGTH_SHORT).show();
-                    setResult(100);
-                    finish();
-                }catch (Exception e){
-                    et_calendar_schedule_add.setText(e.getMessage());
-                }
+                sqliteDB.execSQL("DELETE FROM DESTINATION WHERE LOCATION = '" + location + "'");
+                setResult(100);
+                finish();
             }
         });
     }
@@ -142,23 +117,12 @@ public class CalendarScheduleAddActivity extends AppCompatActivity implements On
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
         this.naverMap = naverMap;
-        mlatlng = new LatLng(37.3399, 126.733);
-
-        CameraPosition cameraPosition = new CameraPosition(mlatlng,16);
-
+        CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng),16);
         naverMap.setCameraPosition(cameraPosition);
 
-        naverMap.setOnMapClickListener(this);
-    }
-
-    @Override
-    public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
-        marker.setMap(null);
-        marker.setPosition(latLng);
+        marker.setPosition(new LatLng(lat, lng));
         marker.setMap(naverMap);
-
-        //tv_calendar_schedule_add_address.setText( Double.toString(latLng.latitude) + "/" + Double.toString(latLng.longitude));
-        CallRetrofit(latLng);
+        CallRetrofit(new LatLng(lat, lng));
     }
 
     public void CallRetrofit(LatLng latlng){
@@ -166,7 +130,6 @@ public class CalendarScheduleAddActivity extends AppCompatActivity implements On
             reverseGeocoderClient = ReverseGeocoderClient.getInstance();
             reverseGeocoderInterface = ReverseGeocoderClient.getReverseGeocoderInterface();
 
-            mlatlng = latlng;
             reverseGeocoderInterface.getAddress(Double.toString(latlng.longitude) + "," + Double.toString(latlng.latitude),
                     "json",
                     "addr,roadaddr",
@@ -174,7 +137,6 @@ public class CalendarScheduleAddActivity extends AppCompatActivity implements On
                     key).enqueue(new Callback<Address>() {
                 @Override
                 public void onResponse(Call<Address> call, Response<Address> response) {
-                    //need to set out of country
                     Address address = response.body();
                     if(address.getStatus().getCode()==0) {
                         maddress = address.getResults().get(0).getRegion().getArea1().getName() + " " +
@@ -193,21 +155,20 @@ public class CalendarScheduleAddActivity extends AppCompatActivity implements On
                         }
 
                         //tv_calendar_schedule_add_address.setText(Integer.toString(address.getResults().size()));
-                        tv_calendar_schedule_add_address.setText(maddress);
+                        tv_destination_show_gps.setText(maddress);
                     }
                     else{
-                        tv_calendar_schedule_add_address.setText("위치 정보가 없습니다.");
+                        tv_destination_show_gps.setText("위치 정보가 없습니다.");
                     }
-
                 }
 
                 @Override
                 public void onFailure(Call<Address> call, Throwable t) {
-
+                    tv_destination_show_gps.setText(t.getMessage());
                 }
             });
         }catch (Exception e){
-            tv_calendar_schedule_add_address.setText(e.getMessage());
+            tv_destination_show_gps.setText(e.getMessage());
         }
     }
 }
