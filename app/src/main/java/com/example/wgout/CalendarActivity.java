@@ -1,6 +1,8 @@
 package com.example.wgout;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -24,7 +27,10 @@ public class CalendarActivity extends AppCompatActivity {
     private GregorianCalendar today = new GregorianCalendar();
     private int year = today.get(Calendar.YEAR), month = today.get(Calendar.MONTH);
     private static final int CALENDAR_EMPTY = 0, CALENDAR_DAY = 1;
+    private String mdate;
 
+
+    private SQLiteDatabase sqliteDB;
 
     private CalendarRecyclerAdapter adapter_calendar;
 
@@ -34,6 +40,8 @@ public class CalendarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_calendar);
         Intent intent = getIntent();
 
+        sqliteDB = init_DB();
+        init_tables();
         init_view();
         btn_clicked();
         setCalender(year,month);
@@ -44,6 +52,31 @@ public class CalendarActivity extends AppCompatActivity {
         btn_calendar_future = (Button)findViewById(R.id.btn_calendar_future);
         tv_calendar_date = (TextView)findViewById(R.id.tv_calendar_date);
         rv_calendar = (RecyclerView)findViewById(R.id.rv_calendar);
+    }
+
+    private SQLiteDatabase init_DB(){
+        SQLiteDatabase db = null;
+
+        File file = new File(getFilesDir(), "wgout.db");
+        try{
+            db = SQLiteDatabase.openOrCreateDatabase(file,null);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return db;
+    }
+
+    private void init_tables(){
+        if(sqliteDB != null) {
+            String sqlCreateTbl = "CREATE TABLE IF NOT EXISTS SCHEDULE (" +
+                    "DATE " + "TEXT," +
+                    "CONTENT " + "TEXT," +
+                    "LAT " + "DOUBLE," +
+                    "LNG " + "DOUBLE" +
+                    ")";
+            sqliteDB.execSQL(sqlCreateTbl);
+        }
     }
 
     private void btn_clicked(){
@@ -76,12 +109,27 @@ public class CalendarActivity extends AppCompatActivity {
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) -1 ;
         int max = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
+        String str = "";
+
         tv_calendar_date.setText(Integer.toString(calendar.get(Calendar.YEAR)) + "/" + Integer.toString(calendar.get(Calendar.MONTH)+1));
         for(int i = 0; i < dayOfWeek; i++){
-            adapter_calendar.addItem(CALENDAR_EMPTY,0);
+            adapter_calendar.addItem(CALENDAR_EMPTY,0, false, 0);
         }
         for(int i = 1; i <= max; i++){
-            adapter_calendar.addItem(CALENDAR_DAY,i);
+            mdate = Integer.toString((year * 10000) + ((month+1) * 100) + i);
+
+            Cursor cursor_calendar_schedule = null;
+            cursor_calendar_schedule = sqliteDB.rawQuery("SELECT * FROM SCHEDULE WHERE DATE = '" + mdate + "'", null);
+
+            str += Integer.toString(cursor_calendar_schedule.getCount()) + " ";
+
+            if(cursor_calendar_schedule.getCount() != 0) {
+                adapter_calendar.addItem(CALENDAR_DAY, i, true, cursor_calendar_schedule.getCount());
+            }
+            else {
+                adapter_calendar.addItem(CALENDAR_DAY, i, false, 0);
+            }
+
             //날짜에 따른 일정 표시
         }
     }

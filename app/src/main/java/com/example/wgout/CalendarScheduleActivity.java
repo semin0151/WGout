@@ -117,7 +117,7 @@ public class CalendarScheduleActivity extends AppCompatActivity {
     private void init_rv(){
         rv_calendar_schedule.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter_calendar_schedule = new CalendarScheduleRecyclerAdapter();
+        adapter_calendar_schedule = new CalendarScheduleRecyclerAdapter(year, month, day);
 
         rv_calendar_schedule.setAdapter(adapter_calendar_schedule);
     }

@@ -3,6 +3,24 @@ package com.example.wgout;
 public class CalendarRecyclerItem {
     private int key;
     private int day;
+    private boolean schedule;
+    private int count;
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public boolean isSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(boolean schedule) {
+        this.schedule = schedule;
+    }
 
     public int getKey() {
         return key;

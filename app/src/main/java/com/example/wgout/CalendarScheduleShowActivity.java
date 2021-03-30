@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.wgout.Data.Address;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.MapView;
@@ -20,10 +21,16 @@ import com.naver.maps.map.overlay.Marker;
 
 import java.io.File;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class CalendarScheduleShowActivity extends AppCompatActivity implements OnMapReadyCallback {
     private MapView mv_calendar_schedule_show;
     private Button btn_calendar_schedule_show_delete;
+    private TextView tv_calendar_schedule_show_date;
     private TextView tv_calendar_schedule_show_content;
+    private TextView tv_calendar_schedule_show_gps;
 
     private String content;
 
@@ -33,21 +40,36 @@ public class CalendarScheduleShowActivity extends AppCompatActivity implements O
 
     private double lat, lng;
     private NaverMap naverMap;
+    private String maddress, mdate;
+    private String key_id = "q618nmd8vn";
+    private String key = "DjrtsY4erRXEe41gTfwLZj0dQmldbk7ZhzI4hEVb";
+    private int year, month, day;
+
+    private ReverseGeocoderClient reverseGeocoderClient;
+    private ReverseGeocoderInterface reverseGeocoderInterface;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar_schedule_show);
-//날짜 표시
+        //날짜 표시
         Intent intent = getIntent();
 
         content = intent.getStringExtra("content");
         lat = intent.getDoubleExtra("lat",1);
         lng = intent.getDoubleExtra("lng",1);
+        year = intent.getIntExtra("year",1);
+        month = intent.getIntExtra("month", 1);
+        day = intent.getIntExtra("day",1);
+
+        mdate = Integer.toString((year * 10000) + ((month+1) * 100) + day);
+
 
         init_view();
         sqliteDB = init_DB();
         init_tables();
 
+        tv_calendar_schedule_show_date.setText(mdate);
         tv_calendar_schedule_show_content.setText(content);
         mv_calendar_schedule_show.onCreate(savedInstanceState);
         mv_calendar_schedule_show.getMapAsync(this);
@@ -58,7 +80,9 @@ public class CalendarScheduleShowActivity extends AppCompatActivity implements O
     private void init_view(){
         mv_calendar_schedule_show = (MapView)findViewById(R.id.mv_calendar_schedule_show);
         btn_calendar_schedule_show_delete = (Button)findViewById(R.id.btn_calendar_schedule_show_delete);
+        tv_calendar_schedule_show_date = (TextView)findViewById(R.id.tv_calendar_schedule_show_date);
         tv_calendar_schedule_show_content = (TextView)findViewById(R.id.tv_calendar_schedule_show_content);
+        tv_calendar_schedule_show_gps = (TextView)findViewById(R.id.tv_calendar_schedule_show_gps);
     }
 
     private SQLiteDatabase init_DB(){
@@ -90,7 +114,6 @@ public class CalendarScheduleShowActivity extends AppCompatActivity implements O
         btn_calendar_schedule_show_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //DB 데이터 삭제 해야함
                 sqliteDB.execSQL("DELETE FROM SCHEDULE WHERE CONTENT = '" + content + "'");
                 setResult(100);
                 finish();
@@ -106,5 +129,53 @@ public class CalendarScheduleShowActivity extends AppCompatActivity implements O
 
         marker.setPosition(new LatLng(lat, lng));
         marker.setMap(naverMap);
+        CallRetrofit(new LatLng(lat, lng));
+    }
+
+    public void CallRetrofit(LatLng latlng){
+        try {
+            reverseGeocoderClient = ReverseGeocoderClient.getInstance();
+            reverseGeocoderInterface = ReverseGeocoderClient.getReverseGeocoderInterface();
+
+            reverseGeocoderInterface.getAddress(Double.toString(latlng.longitude) + "," + Double.toString(latlng.latitude),
+                    "json",
+                    "addr,roadaddr",
+                    key_id,
+                    key).enqueue(new Callback<Address>() {
+                @Override
+                public void onResponse(Call<Address> call, Response<Address> response) {
+                    Address address = response.body();
+                    if(address.getStatus().getCode()==0) {
+                        maddress = address.getResults().get(0).getRegion().getArea1().getName() + " " +
+                                address.getResults().get(0).getRegion().getArea2().getName() + " " +
+                                address.getResults().get(0).getRegion().getArea3().getName();
+
+                        if(address.getResults().size() == 1) {
+                            maddress += " " + address.getResults().get(0).getLand().getNumber1();
+                            if(address.getResults().get(0).getLand().getNumber2().length() != 0)
+                                maddress += "-" + address.getResults().get(0).getLand().getNumber2();
+                        }else{
+                            maddress += " " + address.getResults().get(0).getLand().getNumber1();
+                            if(address.getResults().get(0).getLand().getNumber2().length() != 0)
+                                maddress += "-" + address.getResults().get(0).getLand().getNumber2();
+                            maddress += "\n" + address.getResults().get(1).getLand().getAddition0().getValue();
+                        }
+
+                        //tv_calendar_schedule_add_address.setText(Integer.toString(address.getResults().size()));
+                        tv_calendar_schedule_show_gps.setText(maddress);
+                    }
+                    else{
+                        tv_calendar_schedule_show_gps.setText("위치 정보가 없습니다.");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Address> call, Throwable t) {
+                    tv_calendar_schedule_show_gps.setText(t.getMessage());
+                }
+            });
+        }catch (Exception e){
+            tv_calendar_schedule_show_gps.setText(e.getMessage());
+        }
     }
 }

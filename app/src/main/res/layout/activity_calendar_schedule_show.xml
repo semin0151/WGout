@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:id="@+id/tv_calendar_schedule_add_date"
+            android:id="@+id/tv_calendar_schedule_show_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

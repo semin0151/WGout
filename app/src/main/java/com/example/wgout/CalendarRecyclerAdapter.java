@@ -100,7 +100,10 @@ public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecycl
                     holder.iv_calendar_day.setBackgroundColor(0xff00ff00);
                 }
                 holder.tv_calendar_day.setText(Integer.toString(item.getDay()));
-
+                if(item.isSchedule()){
+                    holder.tv_calendar_schedule.setVisibility(View.VISIBLE);
+                    holder.tv_calendar_schedule.setText("일정" + Integer.toString(item.getCount()));
+                }
                 selItem(holder,item.getDay());
 
                 break;
@@ -112,11 +115,13 @@ public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecycl
         return lists.size();
     }
 
-    public void addItem(int key, int day){
+    public void addItem(int key, int day, boolean schedule, int count){
         CalendarRecyclerItem item = new CalendarRecyclerItem();
 
         item.setKey(key);
         item.setDay(day);
+        item.setSchedule(schedule);
+        item.setCount(count);
 
         lists.add(item);
     }

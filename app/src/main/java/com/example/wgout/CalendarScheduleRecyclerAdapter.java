@@ -19,7 +19,12 @@ public class CalendarScheduleRecyclerAdapter extends RecyclerView.Adapter<Calend
     private ArrayList<CalendarScheduleRecyclerItem> lists = new ArrayList<>();
     private SQLiteDatabase sqliteDB;
 
-    CalendarScheduleRecyclerAdapter(){
+    private int year, month, day;
+
+    CalendarScheduleRecyclerAdapter(int year, int month, int day){
+        this.year = year;
+        this.month = month;
+        this.day = day;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -72,8 +77,11 @@ public class CalendarScheduleRecyclerAdapter extends RecyclerView.Adapter<Calend
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), CalendarScheduleShowActivity.class);
                 intent.putExtra("content", item.getContent());
-                intent.putExtra("lat",item.getLatitude());
+                intent.putExtra("lat", item.getLatitude());
                 intent.putExtra("lng", item.getLongitude());
+                intent.putExtra("year", year);
+                intent.putExtra("month", month);
+                intent.putExtra("day", day);
                 ((Activity)v.getContext()).startActivityForResult(intent, 0);
             }
         });
