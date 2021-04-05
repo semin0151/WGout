@@ -119,5 +119,9 @@ public class DestinationActivity extends AppCompatActivity {
             rv_destination.setVisibility(View.GONE);
             tv_destination_no.setVisibility(View.VISIBLE);
         }
+        else{
+            rv_destination.setVisibility(View.VISIBLE);
+            tv_destination_no.setVisibility(View.GONE);
+        }
     }
 }

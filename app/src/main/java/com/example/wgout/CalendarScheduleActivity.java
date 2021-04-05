@@ -45,6 +45,7 @@ public class CalendarScheduleActivity extends AppCompatActivity {
 
         btn_clicked();
         load_values();
+        setResult(100);
 
     }
 
@@ -134,6 +135,10 @@ public class CalendarScheduleActivity extends AppCompatActivity {
         if (adapter_calendar_schedule.getItemCount()==0) {
             rv_calendar_schedule.setVisibility(View.GONE);
             tv_calendar_schedule_no.setVisibility(View.VISIBLE);
+        }
+        else{
+            rv_calendar_schedule.setVisibility(View.VISIBLE);
+            tv_calendar_schedule_no.setVisibility(View.GONE);
         }
     }
 }

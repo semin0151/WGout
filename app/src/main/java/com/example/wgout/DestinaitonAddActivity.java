@@ -49,6 +49,8 @@ public class DestinaitonAddActivity extends AppCompatActivity implements OnMapRe
 
     private Marker marker = new Marker();
     private LatLng mlatlng = null;
+
+    private GpsGetter gpsGetter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,8 +116,8 @@ public class DestinaitonAddActivity extends AppCompatActivity implements OnMapRe
                     sqliteDB.execSQL(sqlInsert);
 
                     et_destination_add.setText("");
-                    Toast.makeText(getApplicationContext(), "저장되었습니다.", Toast.LENGTH_SHORT).show();
                     setResult(100);
+                    Toast.makeText(getApplicationContext(), "저장되었습니다.", Toast.LENGTH_SHORT).show();
                     finish();
                 }catch (Exception e){
                     et_destination_add.setText(e.getMessage());
@@ -127,14 +129,18 @@ public class DestinaitonAddActivity extends AppCompatActivity implements OnMapRe
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
         this.naverMap = naverMap;
-        //map 초기 위치 현재위치로
-        mlatlng = new LatLng(37.3399, 126.733);
+        gpsGetter = new GpsGetter(this);
+        mlatlng = new LatLng(gpsGetter.getLatitude(), gpsGetter.getLongitude());
 
         CameraPosition cameraPosition = new CameraPosition(mlatlng,16);
 
         naverMap.setCameraPosition(cameraPosition);
 
         naverMap.setOnMapClickListener(this);
+
+        marker.setPosition(mlatlng);
+        marker.setMap(naverMap);
+        CallRetrofit(mlatlng);
     }
 
     @Override

@@ -28,6 +28,8 @@ public class CalendarActivity extends AppCompatActivity {
     private int year = today.get(Calendar.YEAR), month = today.get(Calendar.MONTH);
     private static final int CALENDAR_EMPTY = 0, CALENDAR_DAY = 1;
     private String mdate;
+    private static final int CODE_RESULT = 100;
+
 
 
     private SQLiteDatabase sqliteDB;
@@ -45,6 +47,17 @@ public class CalendarActivity extends AppCompatActivity {
         init_view();
         btn_clicked();
         setCalender(year,month);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == CODE_RESULT){
+            sqliteDB = init_DB();
+            init_tables();
+            init_view();
+            setCalender(year,month);
+        }
     }
 
     private void init_intent(){

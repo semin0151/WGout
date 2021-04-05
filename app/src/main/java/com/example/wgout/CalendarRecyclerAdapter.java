@@ -135,7 +135,8 @@ public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecycl
                     intent.putExtra("year", year);
                     intent.putExtra("month",month);
                     intent.putExtra("day", day);
-                    v.getContext().startActivity(intent);
+                    //v.getContext().startActivity(intent);
+                    ((Activity)v.getContext()).startActivityForResult(intent, 0);
                 }catch (Exception e){
                     holder.tv_calendar_day.setText(e.getMessage());
                 }

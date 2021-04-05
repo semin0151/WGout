@@ -50,6 +50,8 @@ public class CalendarScheduleAddActivity extends AppCompatActivity implements On
 
     private static NaverMap naverMap;
 
+    private GpsGetter gpsGetter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,8 +131,8 @@ public class CalendarScheduleAddActivity extends AppCompatActivity implements On
                     sqliteDB.execSQL(sqlInsert);
 
                     et_calendar_schedule_add.setText("");
-                    Toast.makeText(getApplicationContext(), "저장되었습니다.", Toast.LENGTH_SHORT).show();
                     setResult(100);
+                    Toast.makeText(getApplicationContext(), "저장되었습니다.", Toast.LENGTH_SHORT).show();
                     finish();
                 }catch (Exception e){
                     et_calendar_schedule_add.setText(e.getMessage());
@@ -142,13 +144,18 @@ public class CalendarScheduleAddActivity extends AppCompatActivity implements On
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
         this.naverMap = naverMap;
-        mlatlng = new LatLng(37.3399, 126.733);
+        gpsGetter = new GpsGetter(this);
+        mlatlng = new LatLng(gpsGetter.getLatitude(), gpsGetter.getLongitude());
 
         CameraPosition cameraPosition = new CameraPosition(mlatlng,16);
 
         naverMap.setCameraPosition(cameraPosition);
 
         naverMap.setOnMapClickListener(this);
+
+        marker.setPosition(mlatlng);
+        marker.setMap(naverMap);
+        CallRetrofit(mlatlng);
     }
 
     @Override

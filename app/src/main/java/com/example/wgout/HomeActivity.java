@@ -10,8 +10,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.wgout.Data.Address;
+import com.naver.maps.geometry.LatLng;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity {
     private Button btn_drawer;
@@ -25,6 +32,12 @@ public class HomeActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private View drawerView;
     private String strDate;
+    private String maddress;
+    private String key_id = "q618nmd8vn";
+    private String key = "DjrtsY4erRXEe41gTfwLZj0dQmldbk7ZhzI4hEVb";
+
+    private ReverseGeocoderClient reverseGeocoderClient;
+    private ReverseGeocoderInterface reverseGeocoderInterface;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,10 +48,17 @@ public class HomeActivity extends AppCompatActivity {
 
         init_view();
         btn_clicked();
-        //drawerLayout.addDrawerListener(listener);
 
         strDate = new SimpleDateFormat("yyyy.MM.dd").format(new Date(System.currentTimeMillis()));
         tv_home_date.setText(strDate);
+
+        try{
+            //현재위치 + 주소
+            //GpsGetter gpsGetter = new GpsGetter(this);
+            //CallRetrofit(new LatLng(gpsGetter.getLatitude(), gpsGetter.getLongitude()));
+        }catch (Exception e){
+            tv_home_date.setText(e.getMessage());
+        }
 
     }
 
@@ -96,27 +116,51 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
-/*
-    DrawerLayout.DrawerListener listener = new DrawerLayout.DrawerListener() {
-        @Override
-        public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
 
+    public void CallRetrofit(LatLng latlng){
+        try {
+            reverseGeocoderClient = ReverseGeocoderClient.getInstance();
+            reverseGeocoderInterface = ReverseGeocoderClient.getReverseGeocoderInterface();
+
+            reverseGeocoderInterface.getAddress(Double.toString(latlng.longitude) + "," + Double.toString(latlng.latitude),
+                    "json",
+                    "addr,roadaddr",
+                    key_id,
+                    key).enqueue(new Callback<Address>() {
+                @Override
+                public void onResponse(Call<Address> call, Response<Address> response) {
+                    Address address = response.body();
+                    if(address.getStatus().getCode()==0) {
+                        maddress = address.getResults().get(0).getRegion().getArea1().getName() + " " +
+                                address.getResults().get(0).getRegion().getArea2().getName() + " " +
+                                address.getResults().get(0).getRegion().getArea3().getName();
+
+                        if(address.getResults().size() == 1) {
+                            maddress += " " + address.getResults().get(0).getLand().getNumber1();
+                            if(address.getResults().get(0).getLand().getNumber2().length() != 0)
+                                maddress += "-" + address.getResults().get(0).getLand().getNumber2();
+                        }else{
+                            maddress += " " + address.getResults().get(0).getLand().getNumber1();
+                            if(address.getResults().get(0).getLand().getNumber2().length() != 0)
+                                maddress += "-" + address.getResults().get(0).getLand().getNumber2();
+                            maddress += "\n" + address.getResults().get(1).getLand().getAddition0().getValue();
+                        }
+
+                        //tv_calendar_schedule_add_address.setText(Integer.toString(address.getResults().size()));
+                        tv_home_date.setText(maddress);
+                    }
+                    else{
+                        tv_home_date.setText("위치 정보가 없습니다.");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Address> call, Throwable t) {
+                    tv_home_date.setText(t.getMessage());
+                }
+            });
+        }catch (Exception e){
+            tv_home_date.setText(e.getMessage());
         }
-
-        @Override
-        public void onDrawerOpened(@NonNull View drawerView) {
-
-        }
-
-        @Override
-        public void onDrawerClosed(@NonNull View drawerView) {
-
-        }
-
-        @Override
-        public void onDrawerStateChanged(int newState) {
-
-        }
-    };
- */
+    }
 }
