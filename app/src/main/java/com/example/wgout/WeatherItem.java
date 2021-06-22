@@ -1,14 +1,17 @@
 package com.example.wgout;
 
-public class WeatherVilageFcstItem {
+public class WeatherItem {
     private String date;
     private String time;
 
-    private String POP;
-    private String PTY;
-    private String SKY;
-    private String T3H;
-    private String REH;
+    private int code;
+
+    private String POP; //강수확률
+    private String PTY; //강수형태
+    private String RN1; //1시간 강수량
+    private String SKY; //하늘상태
+    private String T1H; //기온
+    private String REH; //습도
 
     public String getDate() {
         return date;
@@ -24,6 +27,14 @@ public class WeatherVilageFcstItem {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public String getPOP() {
@@ -42,6 +53,14 @@ public class WeatherVilageFcstItem {
         this.PTY = PTY;
     }
 
+    public String getRN1() {
+        return RN1;
+    }
+
+    public void setRN1(String RN1) {
+        this.RN1 = RN1;
+    }
+
     public String getSKY() {
         return SKY;
     }
@@ -50,12 +69,12 @@ public class WeatherVilageFcstItem {
         this.SKY = SKY;
     }
 
-    public String getT3H() {
-        return T3H;
+    public String getT1H() {
+        return T1H;
     }
 
-    public void setT3H(String t3H) {
-        T3H = t3H;
+    public void setT1H(String t1H) {
+        T1H = t1H;
     }
 
     public String getREH() {
