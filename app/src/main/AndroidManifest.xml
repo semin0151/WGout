@@ -21,11 +21,10 @@
         <activity android:name=".DestinationActivity">  </activity>
         <activity android:name=".DestinaitonAddActivity">  </activity>
         <activity android:name=".DestinationShowActivity">  </activity>
+        <activity android:name=".DestinationSearchActivity"> </activity>
         <activity android:name=".LuckActivity">  </activity>
 
-        <activity android:name=".WeatherActivity">
-
-        </activity>
+        <activity android:name=".WeatherActivity">  </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

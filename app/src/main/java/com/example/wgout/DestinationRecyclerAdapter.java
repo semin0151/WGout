@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,10 +19,12 @@ public class DestinationRecyclerAdapter extends RecyclerView.Adapter<Destination
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView tv_destination_location;
+        private Button btn_destination_search;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tv_destination_location = (TextView)itemView.findViewById(R.id.tv_destination_location);
+            btn_destination_search = (Button)itemView.findViewById(R.id.btn_destination_search);
         }
     }
 
@@ -65,6 +68,17 @@ public class DestinationRecyclerAdapter extends RecyclerView.Adapter<Destination
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), DestinationShowActivity.class);
+                intent.putExtra("location", item.getLocation());
+                intent.putExtra("lat", item.getLatitude());
+                intent.putExtra("lng", item.getLongitude());
+                ((Activity)v.getContext()).startActivityForResult(intent, 0);
+            }
+        });
+
+        holder.btn_destination_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), DestinationSearchActivity.class);
                 intent.putExtra("location", item.getLocation());
                 intent.putExtra("lat", item.getLatitude());
                 intent.putExtra("lng", item.getLongitude());

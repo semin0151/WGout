@@ -8,7 +8,7 @@ import retrofit2.http.Query;
 
 public interface ReverseGeocoderInterface {
 
-    @GET("map-reversegeocode/v2/gc")
+        @GET("map-reversegeocode/v2/gc")
     Call<Address>
     getAddress(@Query("coords") String coords,
                @Query("output") String output,

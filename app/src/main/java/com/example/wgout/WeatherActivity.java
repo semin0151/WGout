@@ -142,11 +142,12 @@ public class WeatherActivity extends AppCompatActivity {
                         public void onResponse(Call<UltraSrtFcst> call, Response<UltraSrtFcst> response) {
                             UltraSrtFcst ultraSrtFcst = response.body();
                             // 정상적인 결과값 출력될 때
+
                             if (ultraSrtFcst.getResponse().getHeader().getResultCode().equals("00")) {
 
                                 size = ultraSrtFcst.getResponse().getBody().getItems().getItem().size() / 10;
-                                for (int i = 0; i < size; i++) {
 
+                                for (int i = 0; i < size; i++) {
                                     adapter_weather.addItem(ultraSrtFcst.getResponse().getBody().getItems().getItem().get(PTY * size + i).getFcstDate(),
                                             ultraSrtFcst.getResponse().getBody().getItems().getItem().get(PTY * size + i).getFcstTime(),
                                             ultra,
@@ -162,8 +163,8 @@ public class WeatherActivity extends AppCompatActivity {
                                         checkTime += ultraSrtFcst.getResponse().getBody().getItems().getItem().get(PTY * size + i).getFcstTime().charAt(j);
                                     }
                                 }
-                                rv_weather.setAdapter(adapter_weather);
 
+                                rv_weather.setAdapter(adapter_weather);
                             }
 
                             // API 업데이트 안되었을 때
@@ -259,7 +260,7 @@ public class WeatherActivity extends AppCompatActivity {
                                         vilage_T3H = vilageFcst.getResponse().getBody().getItems().getItem().get(i).getFcstValue() + " ";
 
                                         strCompareDate = vilageFcst.getResponse().getBody().getItems().getItem().get(i).getFcstDate() +
-                                                vilageFcst.getResponse().getBody().getItems().getItem().get(i).getFcstTime();
+                                               vilageFcst.getResponse().getBody().getItems().getItem().get(i).getFcstTime();
                                         strCompareDate = strCompareDate.substring(2, 10);
                                         tv_test2.setText(strCompareDate);
                                         if (Integer.parseInt(strCompareDate) > Integer.parseInt(strCheckDate)) {
