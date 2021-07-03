@@ -37,6 +37,7 @@ public class WeatherActivity extends AppCompatActivity {
 
     private String serviceKey = "J1uWhMdL85rUtm1/ogRUgAehBm4pAZ2QJBmZ8ytsj9q5VPkKoPyTuUWItYfi5LAXgTA+mn2ERVnNZDQsfwYxpg==";
     private String strDate = new SimpleDateFormat("yyyyMMdd").format(new Date(System.currentTimeMillis()));
+    private String strDate2;
     private String strTime, strTime2;
     private String strCheckDate = "1001";
     private String strCompareDate = "";
@@ -165,11 +166,13 @@ public class WeatherActivity extends AppCompatActivity {
                                 }
 
                                 rv_weather.setAdapter(adapter_weather);
+
                             }
 
                             // API 업데이트 안되었을 때
                             else {
                                 //여기에서 00시일때 설정
+
                                 strTime = new SimpleDateFormat("HHmm").format(new Date(System.currentTimeMillis() - (3600 * 1000)));
                                 ultraSrtFcstInterface.getData(serviceKey, 10000, "JSON", strDate, strTime, x, y).enqueue(new Callback<UltraSrtFcst>() {
                                     @Override
@@ -195,6 +198,7 @@ public class WeatherActivity extends AppCompatActivity {
                                             }
                                         }
                                         rv_weather.setAdapter(adapter_weather);
+
                                     }
 
                                     @Override
@@ -202,6 +206,7 @@ public class WeatherActivity extends AppCompatActivity {
 
                                     }
                                 });
+
                             }
                             //됐다가 안됐다가 함. 일단 됨
                             strCheckDate = Integer.toString(checkDate) + checkTime;
@@ -225,11 +230,13 @@ public class WeatherActivity extends AppCompatActivity {
             vilageFcstClient = WeatherVilageFcstClient.getInstance();
             vilageFcstInterface = WeatherVilageFcstClient.getVilageFcstInterface();
             //여기서 00시일때 설정
+
+            strDate2 = new SimpleDateFormat("yyyyMMdd").format(new Date(System.currentTimeMillis() - (1000 * 7200)));
             strTime2 = new SimpleDateFormat("HH").format(new Date(System.currentTimeMillis() - (1000 * 7200)));
             check = ((Integer.parseInt(strTime2) / 3) * 3) + 2;
             strTime2 = Integer.toString(check) + "00";
-
-            vilageFcstInterface.getData(serviceKey, 10000, "JSON", strDate, strTime2, x, y).
+            tv_test2.setText(strDate2 + strTime2);
+            vilageFcstInterface.getData(serviceKey, 10000, "JSON", strDate2, strTime2, x, y).
                     enqueue(new Callback<VilageFcst>() {
                         @Override
                         public void onResponse(Call<VilageFcst> call, Response<VilageFcst> response) {
@@ -271,9 +278,10 @@ public class WeatherActivity extends AppCompatActivity {
                                 }
 
                             } else {
+                                strDate2 = new SimpleDateFormat("yyyyMMdd").format(new Date(System.currentTimeMillis() - (1000 * 10800)));
                                 strTime2 = new SimpleDateFormat("HHmm").format(new Date(System.currentTimeMillis() - (1000 * 10800)));
 
-                                vilageFcstInterface.getData(serviceKey, 10000, "JSON", strDate, strTime2, x, y).
+                                vilageFcstInterface.getData(serviceKey, 10000, "JSON", strDate2, strTime2, x, y).
                                         enqueue(new Callback<VilageFcst>() {
                                             @Override
                                             public void onResponse(Call<VilageFcst> call, Response<VilageFcst> response) {
@@ -310,7 +318,10 @@ public class WeatherActivity extends AppCompatActivity {
                                                         }
                                                     }
                                                     rv_weather.setAdapter(adapter_weather);
+
                                                 }
+
+
                                             }
 
                                             @Override
